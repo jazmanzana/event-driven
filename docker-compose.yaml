@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - queues
+  db:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+  queues:
+    image: "rabbitmq:latest"
+    ports:
+      - "5672:5672"
