@@ -2,7 +2,7 @@ from models import Job
 import sqlalchemy as sa
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import errors
+from app import errors
 
 
 class Jobs:
