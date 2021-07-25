@@ -5,10 +5,12 @@ from app.domain import jobs, models
 @patch("app.adapters")
 class TestProcess:
     def test_object_id_not_found_in_db_and_all_calls_succeed(self, adapters):
-        print("adapters mock: ", adapters)
         some_object_id = "some-object-id"
         adapters.db.Jobs.get_by_object_id.return_value = []
-        created_job = models.Job(id="some-job-id", object_id=some_object_id,)
+        created_job = models.Job(
+            id="some-job-id",
+            object_id=some_object_id,
+        )
         adapters.db.Jobs.create_or_update.return_value = created_job
         adapters.queues.Publisher.enqueue.assert_called_once_with(str(created_job.id))
         expected_response = {"job_id": f"{created_job.id}"}

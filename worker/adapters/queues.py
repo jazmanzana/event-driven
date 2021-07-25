@@ -4,7 +4,7 @@ import pika
 
 class Publisher:
     EXCHANGE = ""
-    QUEUE = "processing"
+    QUEUE = "done"
 
     def __init__(self, url="localhost"):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
@@ -15,12 +15,12 @@ class Publisher:
     #    self.connection.close()
 
     def publish(self, body: bytes):
-        self.channel.basic_publish(exchange="", routing_key=Publisher.QUEUE, body=str(body))
+        self.channel.basic_publish(exchange="", routing_key=Publisher.QUEUE, body=body)
 
 
 class Consumer:
     EXCHANGE = ""
-    QUEUE = "done"
+    QUEUE = "processing"
 
     def __init__(self, url="localhost"):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(url))

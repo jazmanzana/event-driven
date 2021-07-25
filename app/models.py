@@ -15,9 +15,7 @@ class Status(Enum):
 
 class Job(Base):
     __tablename__ = "jobs"
-    __table_args__ = (
-        sa.PrimaryKeyConstraint("id", name="jobs_pkey"),
-    )
+    __table_args__ = (sa.PrimaryKeyConstraint("id", name="jobs_pkey"),)
     id = sa.Column(
         UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4
     )

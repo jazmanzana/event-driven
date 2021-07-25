@@ -1,14 +1,14 @@
 from app.models import Job
-from typing import List
-import sqlalchemy as sa
-from app import errors
+from typing import List, Union
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+import sqlalchemy as sa
 from sqlalchemy_utils import database_exists, create_database
 import os
 
 
-SQLALCHEMY_DATABASE_URL = f"{os.getenv('DB_DRIVER')}://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
+#SQLALCHEMY_DATABASE_URL = f"{os.getenv('DB_DRIVER')}://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 if not database_exists(engine.url):
     create_database(engine.url)
@@ -19,19 +19,17 @@ class Jobs:
     def __init__(self):
         self.session = Session()
 
-    def get_by_id(self, job_id: str) -> Job:
+    def get_by_id(self, job_id: str) -> Union[Job, None]:
         try:
-            return self.session.query(Job).filter(Job.id == job_id).one()
+            return self.session.query(Job).filter(Job.id == job_id.decode("utf-8")).one()
         except sa.orm.exc.NoResultFound:
-            raise errors.NoResultFound()
+            return None
 
     def get_by_object_id(self, object_id: str) -> List[Job]:
         try:
-            return (
-                self.session.query(Job).filter(Job.object_id == object_id).all()
-            )
+            return self.session.query(Job).filter(Job.object_id == object_id).all()
         except sa.orm.exc.NoResultFound:
-            raise errors.NoResultFound()
+            return []
 
     def create(self, object_id) -> Job:
         job = Job(object_id=object_id)

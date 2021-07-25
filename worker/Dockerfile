@@ -1,10 +1,9 @@
 FROM python:3.8
 
-COPY . ./processor_worker
+COPY . ./worker
 
 RUN pip install --upgrade pip
 
 RUN pip install -r /worker/requirements.txt
 
-# improve this
-CMD ["python", "main.py"]
+CMD ["python", "-m", "worker.main"]
