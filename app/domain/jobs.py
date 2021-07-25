@@ -15,7 +15,7 @@ def process(object_id: str) -> Dict[str, Any]:
 
     # todo: if db or enqueuing fail, returns error to user
     new_job = db.Jobs().create(object_id)
-    queues.Processing().enqueue(str(new_job.id))
+    queues.Publisher().enqueue(str(new_job.id))
 
     return {"job_id": f"{new_job.id}"}
 

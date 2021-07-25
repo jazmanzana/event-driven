@@ -1,4 +1,4 @@
-import pika, sys, os, time
+import pika, sys, os
 
 
 def main():
