@@ -12,6 +12,7 @@ def process(object_id: str) -> Dict[str, Any]:
     print(f"job_processed_in_last_five_minutes: {job_processed_in_last_five_minutes}")
     if job_processed_in_last_five_minutes:
         # todo: this should be serialized before returning
+        # todo: we need to return more info
         old_job = sorted(job_processed_in_last_five_minutes, key=lambda x: x["timestamp"])[0]
         return {"job_id": f"{old_job.id}"}
 
@@ -23,7 +24,11 @@ def process(object_id: str) -> Dict[str, Any]:
     return {"job_id": f"{new_job.id}"}
 
 
-def get_by_id(job_id: str) -> Dict[str, Any]:
-    print(f"Received job id: {job_id}")
-    # todo: query db
-    return {"job_id": f"{job_id}"}
+def get_by_id(received_job_id: str) -> Dict[str, Any]:
+    print(f"Received job id: {received_job_id}")
+    found_job = db.Jobs().get_by_id(received_job_id)
+    if found_job:
+        # todo: we need to return more info
+        return {"job_id": f"{found_job.id}"}
+    else:
+        return {"message": f"job with id '{received_job_id}' not found"}
