@@ -1,4 +1,5 @@
 version: "3.9"
+# todo: add network so only app can see db, and only the services can see queues
 services:
   app:
     build: ./app
@@ -6,19 +7,19 @@ services:
       - "8000:8000"
     depends_on:
      - db
-     - queues
-  job_processor:
-    build: ./job_processor
-    ports:
-      - "5000:5000"
-    depends_on:
-      - queues
+   #  - queues
+  #worker:
+  #  build: ./worker
+  #  ports:
+  #    - "5000:5000"
+  #  depends_on:
+  #    - queues
   db:
     image: "postgres:latest"
     ports:
       - "5432:5432"
     env_file: .env
-  queues:
-    image: "rabbitmq:latest"
-    ports:
-      - "5672:5672"
+  #queues:
+  #  image: "rabbitmq:latest"
+  #  ports:
+  #    - "5672:5672"
