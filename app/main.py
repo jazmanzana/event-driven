@@ -10,6 +10,7 @@ app = FastAPI()
 
 
 class ObjectBody(BaseModel):
+    #todo: id should be uuid
     id: str
 
 # opcion 1: leo de las cola DONE cuando tengo un get
@@ -20,14 +21,12 @@ class ObjectBody(BaseModel):
 
 @app.get("/jobs/{job_id}")
 def get_job(job_id: str):
-    print(f'Received job_id: {job_id}')
-    # todo: add validation for job id, maybe with pydantic?
+    # todo: validate job_id is uuid
     # todo: add error handling
     return jobs.get_by_id(job_id)
 
 
 @app.post("/jobs/process")
 def create_job(body: ObjectBody):
-    print(f'Received body: {body}')
     # todo: add error handling
     return jobs.process(body.id)

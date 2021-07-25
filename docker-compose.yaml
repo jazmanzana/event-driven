@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     depends_on:
      - db
-   #  - queues
+     - queues
   #worker:
   #  build: ./worker
   #  ports:
@@ -19,7 +19,7 @@ services:
     ports:
       - "5432:5432"
     env_file: .env
-  #queues:
-  #  image: "rabbitmq:latest"
-  #  ports:
-  #    - "5672:5672"
+  queues:
+    image: "rabbitmq:latest"
+    ports:
+      - "5672:5672"

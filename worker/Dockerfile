@@ -6,4 +6,5 @@ RUN pip install --upgrade pip
 
 RUN pip install -r /worker/requirements.txt
 
-CMD ["uvicorn", "worker.main:app", "--host", "0.0.0.0", "--port", "5000"]
+# improve this
+CMD ["python", "main.py"]

@@ -4,13 +4,14 @@ import pika, sys, os
 def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
-    channel.queue_declare(queue="processing")
+    queue_name = "processing"
+    channel.queue_declare(queue=queue_name)
 
     def callback(ch, method, properties, body):
         # todo: waits 15 seconds and publishes to "done" queue
         print(f"Was called with ch, method, properties, body: {ch} {method} {properties} {body}")
 
-    channel.basic_consume(queue="processing", auto_ack=True, on_message_callback=callback)
+    channel.basic_consume(queue=queue_name, auto_ack=True, on_message_callback=callback)
 
     channel.start_consuming()
 
