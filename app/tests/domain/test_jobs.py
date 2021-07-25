@@ -8,10 +8,7 @@ class TestProcess:
         print("adapters mock: ", adapters)
         some_object_id = "some-object-id"
         adapters.db.Jobs.get_by_object_id.return_value = []
-        created_job = models.Job(
-            id="some-job-id",
-            object_id=some_object_id,
-        )
+        created_job = models.Job(id="some-job-id", object_id=some_object_id,)
         adapters.db.Jobs.create_or_update.return_value = created_job
         adapters.queues.Publisher.enqueue.assert_called_once_with(str(created_job.id))
         expected_response = {"job_id": f"{created_job.id}"}

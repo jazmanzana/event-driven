@@ -11,10 +11,10 @@ class Consumer:
         self.connection = None
         self.channel = None
 
-    def connect(self, url):
+    def connect(self, url="queues"):
         return AsyncioConnection(
-            parameters=pika.URLParameters(url),
-            on_open_callback=self.open_channel())
+            parameters=pika.URLParameters(url), on_open_callback=self.open_channel()
+        )
 
     def close_connection(self):
         self.connection.close()
@@ -24,6 +24,7 @@ class Consumer:
         self.channel.queue_declare(queue=Consumer.QUEUE)
 
     def start_consuming(self, callback):
-        self.channel.basic_consume(queue=Consumer.QUEUE, auto_ack=True, on_message_callback=callback)
+        self.channel.basic_consume(
+            queue=Consumer.QUEUE, auto_ack=True, on_message_callback=callback
+        )
         self.channel.start_consuming()
-

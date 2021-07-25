@@ -14,7 +14,7 @@ import uuid
 
 
 # revision identifiers, used by Alembic.
-revision = '430377d80831'
+revision = "430377d80831"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,13 +27,26 @@ class Status(enum.Enum):
 
 def upgrade():
     op.create_table(
-        'jobs',
-        sa.Column('id', UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4),
-        sa.Column('object_id', sa.String(), nullable=False, primary_key=True),
-        sa.Column('status', sa.types.Enum(Status), nullable=False, default=Status.processing),
-        sa.Column('timestamp', sa.DateTime(timezone=False), nullable=False, default=datetime.datetime.utcnow),
+        "jobs",
+        sa.Column(
+            "id",
+            UUID(as_uuid=True),
+            nullable=False,
+            primary_key=True,
+            default=uuid.uuid4,
+        ),
+        sa.Column("object_id", sa.String(), nullable=False, primary_key=True),
+        sa.Column(
+            "status", sa.types.Enum(Status), nullable=False, default=Status.processing
+        ),
+        sa.Column(
+            "timestamp",
+            sa.DateTime(timezone=False),
+            nullable=False,
+            default=datetime.datetime.utcnow,
+        ),
     )
 
 
 def downgrade():
-    op.drop_table('jobs')
+    op.drop_table("jobs")

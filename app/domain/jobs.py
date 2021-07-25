@@ -1,38 +1,44 @@
-from typing import Dict, Any
 from app.adapters import db, queues
+from app.errors import NoResultFound
+from app.models import Job
 import datetime
 
 
 # todo https://stackoverflow.com/questions/51291722/define-a-jsonable-type-using-mypy-pep-526
-def process(object_id: str) -> Dict[str, Any]:
+def process(object_id: str) -> Job:
     jobs = db.Jobs().get_by_object_id(object_id)
-    job_processed_in_last_five_minutes = list(filter(lambda x: (datetime.datetime.now() - x.timestamp < datetime.timedelta(minutes=5)), jobs))
+    job_processed_in_last_five_minutes = list(
+        filter(
+            lambda x: (
+                datetime.datetime.now() - x.timestamp < datetime.timedelta(minutes=5)
+            ),
+            jobs,
+        )
+    )
     if job_processed_in_last_five_minutes:
-        # todo: this should be serialized before returning
-        # todo: we need to return more info
-        old_job = sorted(job_processed_in_last_five_minutes, key=lambda x: x.timestamp)[0]
-        return {"job_id": f"{old_job.id}"}
+        return sorted(job_processed_in_last_five_minutes, key=lambda x: x.timestamp)[0]
 
-    # todo: if db or enqueuing fail, returns error to user
+    # todo: add error handling
     new_job = db.Jobs().create(object_id)
-    queues.Publisher().enqueue(str(new_job.id))
+    publisher = queues.Publisher().connect()
+    publisher.publish(str(new_job.id))
 
-    return {"job_id": f"{new_job.id}"}
+    return new_job
 
 
-def retrieve(received_job_id: str) -> Dict[str, Any]:
+def retrieve(received_job_id: str) -> Job:
+    # todo: add error handling
     found_job = db.Jobs().get_by_id(received_job_id)
     if found_job:
-        # todo: we need to return more info
-        return {"job_id": f"{found_job.id}"}
+        return found_job
     else:
-        return {"message": f"job with id '{received_job_id}' not found"}
+        raise NoResultFound()
 
 
-def finish(received_job_id: str):
+def finish(received_job_id: str) -> Job:
     # todo: add error handling
     found_job = db.Jobs().get_by_id(received_job_id)
     if not found_job:
-        return
+        raise NoResultFound()
     found_job.status = "done"
-    db.Jobs().update(found_job)
+    return db.Jobs().update(found_job)

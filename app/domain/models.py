@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum, auto
+from pydantic import BaseModel
 
 
 class Status(Enum):
@@ -7,9 +8,8 @@ class Status(Enum):
     done = auto()
 
 
-class Job:
+class Job(BaseModel):
     id: str
     object_id: str
     status: Status
     timestamp: datetime
-

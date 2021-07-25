@@ -27,9 +27,11 @@ class Jobs:
 
     def get_by_object_id(self, object_id: str) -> List[Job]:
         try:
-           return self.session.query(Job).filter(Job.object_id == object_id).all()  # todo: filter vs filter_by?
+            return (
+                self.session.query(Job).filter(Job.object_id == object_id).all()
+            )  # todo: filter vs filter_by?
         except sa.orm.exc.NoResultFound:
-           raise errors.NoResultFound()
+            raise errors.NoResultFound()
 
     def create(self, object_id) -> Job:
         job = Job(object_id=object_id)

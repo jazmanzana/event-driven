@@ -9,3 +9,6 @@ clean-all:
 
 test:
 	python -m pytest
+
+lint:
+	black .

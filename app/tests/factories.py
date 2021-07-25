@@ -8,4 +8,3 @@ class JobFactory(factory.Factory):
 
     id = factory.Sequence(lambda n: f"some-job-id-{n}")
     status = Status.processing
-

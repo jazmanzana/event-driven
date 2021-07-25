@@ -13,13 +13,13 @@ class Publisher:
     def close_connection(self):
         self.connection.close()
 
-    def connect(self, url):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host="queues"))
+    def connect(self, url="queues"):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
 
     def open_channel(self):
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Publisher.QUEUE)
 
-    def enqueue(self, body):
+    def publish(self, body):
         # todo: handle error
-        self.channel.basic_publish(exchange='', routing_key=Publisher.QUEUE, body=body)
+        self.channel.basic_publish(exchange="", routing_key=Publisher.QUEUE, body=body)
