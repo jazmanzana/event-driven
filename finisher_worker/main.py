@@ -1,7 +1,7 @@
 from finisher_worker.domain import finisher
 
 
-def main():
+def main() -> None:
     finisher.consume()
 
 

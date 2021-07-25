@@ -1,7 +1,7 @@
 from processor_worker.domain import processor
 
 
-def main():
+def main() -> None:
     processor.consume()
 
 

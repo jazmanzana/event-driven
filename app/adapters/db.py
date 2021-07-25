@@ -5,10 +5,10 @@ from app import errors
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
+import os
 
 
-# todo: remove connection string from here
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@db/db"
+SQLALCHEMY_DATABASE_URL = f"{os.getenv('DB_DRIVER')}://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 if not database_exists(engine.url):
     create_database(engine.url)
@@ -29,7 +29,7 @@ class Jobs:
         try:
             return (
                 self.session.query(Job).filter(Job.object_id == object_id).all()
-            )  # todo: filter vs filter_by?
+            )
         except sa.orm.exc.NoResultFound:
             raise errors.NoResultFound()
 
