@@ -1,6 +1,6 @@
 FROM python:3.8
 
-COPY . ./worker
+COPY . ./processor_worker
 
 RUN pip install --upgrade pip
 

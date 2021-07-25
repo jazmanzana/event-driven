@@ -8,8 +8,8 @@ services:
     depends_on:
      - db
      - queues
-  #worker:
-  #  build: ./worker
+  #processor_worker:
+  #  build: ./processor_worker
   #  ports:
   #    - "5000:5000"
   #  depends_on:

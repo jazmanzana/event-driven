@@ -14,17 +14,25 @@ def process(object_id: str) -> Dict[str, Any]:
         return {"job_id": f"{old_job.id}"}
 
     # todo: if db or enqueuing fail, returns error to user
-    new_job = db.Jobs().create_or_update(object_id)
+    new_job = db.Jobs().create(object_id)
     queues.Processing().enqueue(str(new_job.id))
 
     return {"job_id": f"{new_job.id}"}
 
 
 def retrieve(received_job_id: str) -> Dict[str, Any]:
-    print(f"Received job id: {received_job_id}")
     found_job = db.Jobs().get_by_id(received_job_id)
     if found_job:
         # todo: we need to return more info
         return {"job_id": f"{found_job.id}"}
     else:
         return {"message": f"job with id '{received_job_id}' not found"}
+
+
+def finish(received_job_id: str):
+    # todo: add error handling
+    found_job = db.Jobs().get_by_id(received_job_id)
+    if not found_job:
+        return
+    found_job.status = "done"
+    db.Jobs().update(found_job)
