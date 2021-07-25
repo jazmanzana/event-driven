@@ -6,3 +6,6 @@ restart:
 
 clean-all:
 	docker rm -f $$(docker ps -a -q) && docker rmi -f $$(docker images -a -q)
+
+test:
+	python -m pytest

@@ -2,15 +2,15 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as sa
 import datetime
-import enum
+from enum import Enum, auto
 import uuid
 
 Base = declarative_base()
 
 
-class Status(enum.Enum):
-    processing = "processing"
-    done = "done"
+class Status(Enum):
+    processing = auto()
+    done = auto()
 
 
 class Job(Base):

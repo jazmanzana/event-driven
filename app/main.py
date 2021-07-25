@@ -1,4 +1,4 @@
-#from typing import Optional
+from typing import Dict, Any
 from fastapi import FastAPI
 from app.domain import jobs
 from app.adapters import db
@@ -10,7 +10,6 @@ app = FastAPI()
 
 
 class ObjectBody(BaseModel):
-    #todo: id should be uuid
     id: str
 
 # opcion 1: leo de las cola DONE cuando tengo un get
@@ -20,13 +19,13 @@ class ObjectBody(BaseModel):
 
 
 @app.get("/jobs/{job_id}")
-def get_job(job_id: str):
+def get_job(job_id: str) -> Dict[str, Any]:
     # todo: validate job_id is uuid
     # todo: add error handling
-    return jobs.get_by_id(job_id)
+    return jobs.retrieve(job_id)
 
 
 @app.post("/jobs/process")
-def create_job(body: ObjectBody):
+def create_job(body: ObjectBody) -> Dict[str, Any]:
     # todo: add error handling
     return jobs.process(body.id)

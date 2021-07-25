@@ -20,7 +20,7 @@ def process(object_id: str) -> Dict[str, Any]:
     return {"job_id": f"{new_job.id}"}
 
 
-def get_by_id(received_job_id: str) -> Dict[str, Any]:
+def retrieve(received_job_id: str) -> Dict[str, Any]:
     print(f"Received job id: {received_job_id}")
     found_job = db.Jobs().get_by_id(received_job_id)
     if found_job:
