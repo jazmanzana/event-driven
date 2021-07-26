@@ -6,28 +6,30 @@ class Publisher:
     EXCHANGE = ""
     QUEUE = "processing"
 
-    def __init__(self, url="localhost"):
+    def __init__(self, url="queues"):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Publisher.QUEUE)
 
-    #def __exit__(self, exc_type, exc_value, traceback):
+    # def __exit__(self, exc_type, exc_value, traceback):
     #    self.connection.close()
 
     def publish(self, body: bytes):
-        self.channel.basic_publish(exchange="", routing_key=Publisher.QUEUE, body=str(body))
+        self.channel.basic_publish(
+            exchange="", routing_key=Publisher.QUEUE, body=str(body)
+        )
 
 
 class Consumer:
     EXCHANGE = ""
     QUEUE = "done"
 
-    def __init__(self, url="localhost"):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(url))
+    def __init__(self, url="queues"):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Consumer.QUEUE)
 
-    #def __exit__(self, exc_type, exc_value, traceback):
+    # def __exit__(self, exc_type, exc_value, traceback):
     #    self.connection.close()
 
     def set_callback(self, callback: Callable):

@@ -6,12 +6,12 @@ class Publisher:
     EXCHANGE = ""
     QUEUE = "done"
 
-    def __init__(self, url="localhost"):
+    def __init__(self, url="queues"):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Publisher.QUEUE)
 
-    #def __exit__(self, exc_type, exc_value, traceback):
+    # def __exit__(self, exc_type, exc_value, traceback):
     #    self.connection.close()
 
     def publish(self, body: bytes):
@@ -22,12 +22,13 @@ class Consumer:
     EXCHANGE = ""
     QUEUE = "processing"
 
-    def __init__(self, url="localhost"):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(url))
+    def __init__(self, url="queues"):
+        # this type of connection is affecting my performance, probably
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Consumer.QUEUE)
 
-    #def __exit__(self, exc_type, exc_value, traceback):
+    # def __exit__(self, exc_type, exc_value, traceback):
     #    self.connection.close()
 
     def set_callback(self, callback: Callable):

@@ -1,5 +1,8 @@
-run:
-	docker-compose up -d
+run-infra:
+	docker-compose up db queues
+
+run-app:
+	docker-compose up app worker
 
 restart:
 	docker rm $(CONTAINER) && docker image rm event-driven_worker && docker-compose up

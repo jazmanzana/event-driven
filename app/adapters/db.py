@@ -7,8 +7,7 @@ from sqlalchemy_utils import database_exists, create_database
 import os
 
 
-#SQLALCHEMY_DATABASE_URL = f"{os.getenv('DB_DRIVER')}://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/db"
+SQLALCHEMY_DATABASE_URL = f"{os.getenv('DB_DRIVER')}://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 if not database_exists(engine.url):
     create_database(engine.url)
@@ -21,7 +20,11 @@ class Jobs:
 
     def get_by_id(self, job_id: str) -> Union[Job, None]:
         try:
-            return self.session.query(Job).filter(Job.id == job_id.decode("utf-8")).one()
+            job_id = job_id.decode("utf-8")
+        except AttributeError:
+            pass
+        try:
+            return self.session.query(Job).filter(Job.id == job_id).one()
         except sa.orm.exc.NoResultFound:
             return None
 

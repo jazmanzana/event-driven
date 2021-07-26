@@ -9,8 +9,8 @@ Base = declarative_base()
 
 
 class Status(Enum):
-    processing = auto()
-    done = auto()
+    processing = "processing"
+    done = "done"
 
 
 class Job(Base):

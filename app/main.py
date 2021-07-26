@@ -33,7 +33,9 @@ def get_job(job_id: str) -> Dict[str, Job]:
     # todo: validate job_id is uuid
     # todo: add error handling
     job = jobs.retrieve(job_id)
-    return {"result": job} if job else {"message": f"no job found for given id '{job_id}'"}
+    return (
+        {"result": job} if job else {"message": f"no job found for given id '{job_id}'"}
+    )
 
 
 @app.post("/jobs/process")
