@@ -5,6 +5,14 @@ import datetime
 
 
 def process(object_id: str) -> Job:
+    """
+    If the object_id is found in the db for the last 5 minutes,
+    it retrieves this job's information and skips processing.
+    If the object_id cannot be found in the db for the last 5 minutes,
+    it saves it and sends it to a queue to be processed.
+    :param object_id:
+    :return: Job information
+    """
     jobs = db.Jobs().get_by_object_id(object_id)
     job_processed_in_last_five_minutes = list(
         filter(
@@ -26,6 +34,11 @@ def process(object_id: str) -> Job:
 
 
 def retrieve(received_job_id: str) -> Union[Job, None]:
+    """
+    It retrieves the job's information that finds in the db or None if the job was not found.
+    :param received_job_id:
+    :return:
+    """
     # todo: add error handling
     found_job = db.Jobs().get_by_id(received_job_id)
     if not found_job:
@@ -34,6 +47,17 @@ def retrieve(received_job_id: str) -> Union[Job, None]:
 
 
 def finish(ch, method, properties, body) -> Union[Job, None]:
+    """
+    It retrieves the job from the job_id received in the 'body' parameter.
+    Looks for it in the db and updates its status to 'done'.
+    If no job was found, it returns None.
+    :param ch:
+    :param method:
+    :param properties:
+    :param body:
+    :return:
+    """
+    del ch, method, properties
     # todo: add error handling
     found_job = db.Jobs().get_by_id(body)
     if not found_job:

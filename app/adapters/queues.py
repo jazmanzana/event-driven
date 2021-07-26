@@ -1,5 +1,6 @@
 from collections.abc import Callable
 import pika
+import os
 
 
 class Publisher:
@@ -7,16 +8,15 @@ class Publisher:
     QUEUE = "processing"
 
     def __init__(self, url="queues"):
+        # this type of connection is affecting my performance
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Publisher.QUEUE)
-
-    # def __exit__(self, exc_type, exc_value, traceback):
-    #    self.connection.close()
+        self.properties = pika.BasicProperties(expiration=os.getenv("JOB_EXPIRATION", default="60000"))
 
     def publish(self, body: bytes):
         self.channel.basic_publish(
-            exchange="", routing_key=Publisher.QUEUE, body=str(body)
+            exchange="", routing_key=Publisher.QUEUE, body=str(body), properties=self.properties
         )
 
 
@@ -25,12 +25,10 @@ class Consumer:
     QUEUE = "done"
 
     def __init__(self, url="queues"):
+        # this type of connection is affecting my performance
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=url))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=Consumer.QUEUE)
-
-    # def __exit__(self, exc_type, exc_value, traceback):
-    #    self.connection.close()
 
     def set_callback(self, callback: Callable):
         self.channel.basic_consume(

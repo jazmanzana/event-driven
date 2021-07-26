@@ -25,6 +25,7 @@
    - DB_NAME=db
  - in the root of the repository, a `.env` file containing:
    - POSTGRES_PASSWORD=postgres
+   - JOB_EXPIRATION=60000 (in miliseconds)
 
 
 ###  How to run locally
