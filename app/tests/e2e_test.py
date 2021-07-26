@@ -9,7 +9,7 @@ class TestFlow:
         data = {"id": my_object_id}
         headers = {"Content-Type": "application/json"}
         res = requests.post(
-            "http://0.0.0.0:8000/jobs/process", headers=headers, json=data
+            "http://0.0.0.0:8000/jobs", headers=headers, json=data
         )
         result = res.json()["result"]
         assert result["object_id"] == my_object_id

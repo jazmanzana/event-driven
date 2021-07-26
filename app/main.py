@@ -38,7 +38,7 @@ def get_job(job_id: str) -> Dict[str, Job]:
     )
 
 
-@app.post("/jobs/process")
+@app.post("/jobs")
 def create_job(body: ObjectBody) -> Dict[str, Job]:
     # todo: add error handling
     job = jobs.process(body.id)
