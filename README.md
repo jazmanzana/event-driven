@@ -1,11 +1,5 @@
 # event-driven
 
-### What it does
-?
-
-### How it does it
-?
-
 ### Setting it up
 1. Clone the repository:
     ```
@@ -61,5 +55,4 @@ Body must contain the key `object_id`. Body example:
 
 Description: Creates a job resource and starts processing it. It returns the created job information.
 
-### Assumptions
-?
+
