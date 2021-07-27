@@ -1,0 +1,30 @@
+version: "3.9"
+# todo: the app and worker will crash if queues didnt initialize and they try to connect,
+# I didnt have time to solve the issue 'the right way', that's why I created two separate make commands for them
+
+services:
+  app:
+    build: ./app
+    env_file: ./app/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+     - db
+     - queues
+  worker:
+    build: ./worker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - queues
+      - app
+  db:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    env_file: .env
+  queues:
+    image: "rabbitmq:latest"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
